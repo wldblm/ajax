@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/ajax/app-jquery-php/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+    
+    <h1>Les utilisateurs</h1>
+
+    <hr> 
+
+    <form>
+        <label for="lastname">Nom utilisateur</label>
+        <input type="text" name="lastname" id="lastname">
+        
+        <label for="firstname">Prenom utilisateur</label>
+        <input type="text" name="firstname" id="firstname">
+        <br>
+        <button type="button" id="add-user">Ajouter</button>
+    </form>
+
+    <hr>
+    
+    <table id="users" class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Template pour l'affichage d'un post -->
+    <template id="row-user">
+        <tr>
+            <td>{user_id}</td>
+            <td>{user_nom}</td>
+            <td>{user_prenom}</td>
+        </tr>
+        
+    </template>
+
+    <!-- Script Vendor -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    
+
+
+    <!-- Script Custom -->
+    <script>
+
+        $btnAdd = $('#add-user');
+        $lastname = $('#lastname');
+        $firstname = $('#firstname');
+
+    $(document).ready(() => {
+
+        // Affiche la liste des users au chargement de la page
+        getUsers();
+
+        $btnAdd.on('click' , () => {
+            $.ajax({
+                url: "user.php",
+                method:"POST",
+                data:{
+                    lastname: $lastname.val(),
+                    firstname: $firstname.val()
+                }
+            }).always(response => {
+                
+                console.log(response);
+                showUsers(response);
+            });
+        });
+    });
+
+    function getUsers(){
+        $.ajax({
+                url: "user.php",
+                method:"GET",
+                type:"json",
+                success: response => {
+
+                    showUsers(response);
+                }
+            })
+    }
+
+    function showUsers(response)
+    {
+        $container = $('#users').find('tbody');
+        $tpl = $('#row-user');
+
+        $container.html('');
+
+                
+
+                $(response).each((index, user) => {
+
+                    $item = $tpl.html()
+                        .replace(/{user_id}/, index)
+                        .replace(/{user_prenom}/, user.firstname)
+                        .replace(/{user_nom}/, user.lastname)
+                    ;
+
+                    $container.append($item);
+                });
+            
+        
+    }
+    </script>
+</body>
+</html>

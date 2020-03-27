@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Les posts</h1>
+
+    <button id="get-posts">Afficher les posts</button>
+
+    <hr>
+
+    <!-- affichage de la liste des posts-->
+    <div id="posts"></div>
+    
+
+    <!-- template pour l'affichage d'un post -->
+    <template id="post">
+        <h3>{post_title} <small>(#{post_id})</small></h3>
+        <p>{post_content}</p>
+    </template>
+
+    <!-- Script vendor -->
+    
+
+    <script>
+        var xhr;
+       var btn       = document.getElementById('get-posts');
+       var container = document.getElementById('posts')
+       var tpl       = document.getElementById('post')
+
+       btn.addEventListener('click', function() {
+
+        if(window.XMLHttpRequest){
+            // Pour les naviguateur modern
+                xhr = new XMLHttpRequest();
+        }
+        else{
+            // Pour les anciens naviguateur
+            xhr = new ActiveXObject('Microsoft.XMLHTTP');
+        }
+
+
+        // Création de la requête   
+        /**
+        * Creation de la requête 
+        * @param string method : GET | POST | PUT | PATCH | DELETE
+        * @param string url
+        * @param bool async
+        */
+        xhr.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
+           
+
+        // Envoi de la requête 
+        xhr.send();
+
+        // Ecoute des etats de la requête
+        xhr.onreadystatechange =  function(){
+            /* switch(this.readyState){
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break; 
+
+
+                    
+            } */
+
+            if (this.readyState == 4 && this.status == 200){
+
+                var items = JSON.parse(this.responseText);
+
+                for (var i=0; i<items.length; i++){
+
+                    var item = items[i];
+
+                    var $tpl = tpl.innerHTML
+                        .replace(/{post_id}/, item.id)
+                        .replace(/{post_title}/, item.title)
+                        .replace(/{post_content}/, item.body)
+                    ;
+
+                    
+                    container.insertAdjacentHTML('beforeend', $tpl);
+
+                    
+                }
+                console.log($tpl);
+            }
+        }
+
+       });
+    </script>
+</body>
+</html>
