@@ -34,14 +34,6 @@ $lastname = $_POST['lastname'] ?? null;
 
 $user = [
 
-   /*  [
-        'firstname' => "walid",
-        'lastname' => "bilem"
-    ],
-    [
-        'firstname' => "wisam",
-        'lastname' => "bilem"
-    ], */
 ];
 
 $i = $db->query('SELECT * FROM users');
