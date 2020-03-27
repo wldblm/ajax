@@ -1,10 +1,10 @@
 <?php
 
 
-$db_host='localhost';
+$db_host='****';
 $db_name='ajax_exo';
-$db_user='root';
-$db_password=''; 
+$db_user='****';
+$db_password='****'; 
 
 try{
     $db = new PDO(
